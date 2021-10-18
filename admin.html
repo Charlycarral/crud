@@ -54,7 +54,6 @@
                 type="text"
                 class="form-control"
                 placeholder="Ingresar un codigo"
-              
               />
               <div class="valid-feedback">Este campo es correcto</div>
               <div class="invalid-feedback">Este campo es obligatorio</div>
@@ -71,10 +70,7 @@
             </div>
             <div class="mb-3">
               <label for="" class="form-label">descripcion</label>
-              <textarea
-                id="descripcion"
-                class="form-control"
-              ></textarea>
+              <textarea id="descripcion" class="form-control"></textarea>
             </div>
             <div class="mb-3">
               <label for="" class="form-label">cantidad</label>
@@ -102,6 +98,23 @@
               Debe completar todos los datos marcados
             </div>
           </form>
+        </article>
+        <article class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">URL</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaProducto">
+             
+            </tbody>
+          </table>
         </article>
       </section>
     </main>

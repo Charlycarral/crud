@@ -53,12 +53,13 @@ function validarURL(input){
 function validarGeneral(e){
     // previene que recargue la pagina web
     e.preventDefault();
-    console.log('desde la funcion validar general');
+    let alerta = document.querySelector('#msjAlerta')
     // if(true/false)
     if(validarCodigo(codigo) && validarCampoRequerido(producto) && validarCampoRequerido(descripcion) && validarNumeros(cantidad) && validarURL(url)){
-        console.log('aqui tengo que crear el producto')
+        alerta.className = 'alert alert-danger mt-4 d-none';
     }else{
-        console.log('corregir datos')
+        // aqui mostrar el alert del html
+        alerta.className = 'alert alert-danger mt-4';
     }
 }
 

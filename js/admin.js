@@ -14,9 +14,8 @@ let producto = document.querySelector("#producto");
 let descripcion = document.querySelector("#descripcion");
 let formulario = document.querySelector("#formProducto");
 let listaProductos = [];
-
-//   console.log(formulario);
-//  console.log(descripcion);
+let productoExistente = false; // si es false significa que tengo que agregar un nuevo producto
+// true significa que tengo que modificar un producto existente
 
 cargaInicial();
 
@@ -37,14 +36,22 @@ descripcion.addEventListener("blur", () => {
   validarCampoRequerido(descripcion);
 });
 formulario.addEventListener("submit", guardaProducto);
+btnNuevoProducto.addEventListener("click", limpiarFormulario);
 
 function guardaProducto(e) {
   e.preventDefault();
   // verificar que pase todas las validaciones
   if (validarGeneral()) {
-    //tengo que crear el producto
-    console.log("aqui creo el producto");
-    agregarProducto();
+    // aqui pregunto cual es el estado de mi variable productoExistente
+    if (productoExistente === false) {
+      //tengo que crear el producto
+      console.log("aqui creo el producto");
+      agregarProducto();
+    } else {
+      // tengo que modificar el producto
+      console.log("aqui quiero modificar el producto");
+      actualizarProducto();
+    }
   } else {
     // aqui no hacemos nada
     console.log("no deberia hacer nada");
@@ -84,6 +91,8 @@ function limpiarFormulario() {
   url.className = "form-control";
   producto.className = "form-control";
   descripcion.className = "form-control";
+  // resetear el valor de la variable booleana
+  productoExistente = false;
 }
 
 function cargaInicial() {
@@ -101,7 +110,7 @@ function crearFilas(itemProducto) {
   console.log(itemProducto);
   tabla.innerHTML += `<tr>
   <th scope="row">${itemProducto.codigo}</th>
-  <td>${itemProducto.producto}</td>
+  <td>${itemProducto.nombre}</td>
   <td>${itemProducto.descripcion}</td>
   <td>${itemProducto.cantidad}</td>
   <td>${itemProducto.url}</td>
@@ -109,23 +118,49 @@ function crearFilas(itemProducto) {
     <button class="btn btn-warning" onclick="prepararEdicion('${itemProducto.codigo}')">Editar</button>
     <button class="btn btn-danger">Borrar</button>
   </td>
-</tr>`
-
+</tr>`;
 }
 
 window.prepararEdicion = (codigoProducto) => {
-console.log(codigoProducto)
-// buscar el objeto
-let productoBuscado = listaProductos.find((itemProducto)=>{return itemProducto.codigo == codigoProducto})
-console.log(productoBuscado)
-// mostrarlo en el formulario
-codigo.value = productoBuscado.codigo;
-cantidad.value = productoBuscado.cantidad;
-url.value = productoBuscado.url;
-descripcion.value = productoBuscado.descripcion;
-producto.value = productoBuscado.nombre;
+  console.log(codigoProducto);
+  // buscar el objeto
+  let productoBuscado = listaProductos.find((itemProducto) => {
+    return itemProducto.codigo == codigoProducto;
+  });
+  console.log(productoBuscado);
+  // mostrarlo en el formulario
+  codigo.value = productoBuscado.codigo;
+  cantidad.value = productoBuscado.cantidad;
+  url.value = productoBuscado.url;
+  descripcion.value = productoBuscado.descripcion;
+  producto.value = productoBuscado.nombre;
+  // cambio el valor de la variable producto
+  productoExistente = true;
+};
 
+function actualizarProducto() {
+  // buscar la posicion del elemento a editar dentro del arreglo
+  let posicionProducto = listaProductos.findIndex((itemProducto) => {
+    return itemProducto.codigo == codigo.value;
+  });
+  console.log(posicionProducto);
+  // modificar los datos de esa posicion del arreglo
+  listaProductos[posicionProducto].nombre = producto.value;
+  listaProductos[posicionProducto].cantidad = cantidad.value;
+  listaProductos[posicionProducto].descripcion = descripcion.value;
+  listaProductos[posicionProducto].url = url.value;
 
+  // modificar el localstorage
+  localStorage.setItem("arregloProductos", JSON.stringify(listaProductos));
 
-
+  // volver a dibujar la tabla
+  borrarFilas();
+  listaProductos.forEach((itemProducto) => {
+    crearFilas(itemProducto);
+  });
 }
+function borrarFilas() {
+  let tabla = document.querySelector("#tablaProducto");
+  tabla.innerHTML = "";
+}
+
